@@ -47,7 +47,7 @@ jobs:
 
           echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
-            - name: Deploy Application on EC2
+      - name: Deploy Application on EC2
         run: |
           REGISTRY=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
