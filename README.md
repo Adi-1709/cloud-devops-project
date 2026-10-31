@@ -213,6 +213,67 @@ After a successful GitHub Actions run:
 * Verify the Docker container on EC2.
 * Confirm the Flask application responds successfully.
 
+
+## Monitoring and Observability
+
+The project uses Amazon CloudWatch to monitor EC2 infrastructure,
+collect application and operating system logs, and generate alerts.
+
+### CloudWatch Dashboard
+
+Dashboard: `cloud-devops-project-monitoring`
+
+Metrics monitored:
+- EC2 CPU utilization.
+- EC2 memory utilization using CloudWatch Agent.
+- EC2 root disk utilization using CloudWatch Agent.
+
+### CloudWatch Alarms
+
+Three alarms are configured with an 80% threshold:
+
+| Alarm | Metric | Evaluation |
+|---|---|---|
+| High CPU | CPUUtilization | 2 × 300 seconds |
+| High Memory | mem_used_percent | 2 × 60 seconds |
+| High Disk | disk_used_percent | 2 × 60 seconds |
+
+All alarms publish notifications to an Amazon SNS topic.
+
+### Email Notifications
+
+- SNS topic: `cloud-devops-project-alerts`
+- Email subscription configured and confirmed.
+- Notifications are triggered by configured CloudWatch alarms.
+
+### Centralized Logging
+
+CloudWatch Agent collects application and operating system logs.
+
+| Log Group | Source | Retention |
+|---|---|---|
+| `/cloud-devops-project/application` | Docker / Flask application | 14 days |
+| `/cloud-devops-project/system` | Ubuntu syslog | 14 days |
+| `/cloud-devops-project/auth` | Ubuntu authentication logs | 14 days |
+
+The logging pipeline was verified by generating an HTTP request and
+confirming its HTTP 200 access log in CloudWatch Logs.
+
+System and authentication log ingestion were also verified.
+
+### IAM Permissions
+
+The EC2 instance role includes:
+- AmazonEC2ContainerRegistryReadOnly
+- AmazonSSMManagedInstanceCore
+- CloudWatchAgentServerPolicy
+
+Terraform provisions the monitoring dashboard, alarms, SNS resources,
+log groups, IAM permissions, and log retention settings.
+
+The CloudWatch Agent installation and configuration on EC2 were
+performed separately through AWS Systems Manager.
+
 ## Future Improvements
 
 * Automated application tests.

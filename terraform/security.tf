@@ -22,7 +22,7 @@ resource "aws_security_group" "app_sg" {
 resource "aws_vpc_security_group_ingress_rule" "flask_test" {
   security_group_id = aws_security_group.app_sg.id
 
-  cidr_ipv4   = "152.59.190.206/32"
+  cidr_ipv4   = "152.59.174.103/32"
   from_port   = 5000
   to_port     = 5000
   ip_protocol = "tcp"

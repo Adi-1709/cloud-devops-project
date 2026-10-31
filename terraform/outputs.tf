@@ -32,3 +32,8 @@ output "ecr_repository_url" {
   description = "URL of the Docker image repository"
   value       = aws_ecr_repository.app_repo.repository_url
 }
+
+output "sns_topic_arn" {
+  description = "SNS topic ARN for CloudWatch email alerts"
+  value       = aws_sns_topic.cloudwatch_alerts.arn
+}
