@@ -60,14 +60,14 @@ jobs:
           docker run -d --restart unless-stopped -p 5000:5000 --name cloud-devops-container "$IMAGE_URI"
 
           i=1
-          while [ "$i" -le 15 ]; do
+          while [ "\$i" -le 15 ]; do
             if curl -fsS --max-time 5 http://127.0.0.1:5000/; then
               echo "Application health check passed!"
               exit 0
             fi
-            echo "Waiting for Flask application... Attempt $i/15"
+            echo "Waiting for Flask application... Attempt \$i/15"
             sleep 3
-            i=$((i + 1))
+            i=\$((i + 1))
           done
 
           echo "Application health check failed!"
