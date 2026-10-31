@@ -47,7 +47,7 @@ jobs:
 
           echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
-      - name: Deploy Application on EC2
+            - name: Deploy Application on EC2
         run: |
           REGISTRY=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
@@ -58,7 +58,18 @@ jobs:
           docker stop cloud-devops-container || true
           docker rm cloud-devops-container || true
           docker run -d --restart unless-stopped -p 5000:5000 --name cloud-devops-container "$IMAGE_URI"
-          curl --fail --retry 10 --retry-delay 3 http://localhost:5000/
+
+          for i in {1..15}; do
+            if curl -fsS http://127.0.0.1:5000/; then
+              echo "Application health check passed!"
+              exit 0
+            fi
+            echo "Waiting for Flask application..."
+            sleep 3
+          done
+
+          echo "Application health check failed!"
+          exit 1
           EOF
           )
 
