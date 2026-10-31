@@ -73,7 +73,7 @@ jobs:
           EOF
           )
 
-          PARAMETERS=$(printf '%s\n' "$COMMANDS" | jq -R -s 'split("\n") | map(select(length > 0)) | {commands: .}')
+          PARAMETERS=$(printf '%s\n' "$COMMANDS" | jq -R -s '{commands: [.] }')
 
           COMMAND_ID=$(aws ssm send-command \
             --instance-ids "$EC2_INSTANCE_ID" \
